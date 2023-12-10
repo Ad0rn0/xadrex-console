@@ -3,13 +3,12 @@ using tabuleiro;
 
 namespace xadrez_console
 {
-    internal class Program
+    class Program
     {
         static void Main(string[] args)
         {
-            Posicao p = new Posicao(3, 4);
+            Tabuleiro tab = new Tabuleiro(8, 8);
 
-            Console.WriteLine("Posição: " + p);
             Console.ReadLine();
         }
     }
