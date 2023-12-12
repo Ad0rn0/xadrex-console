@@ -9,7 +9,7 @@ namespace xadrez
 
         public PosicaoXadrez(char coluna, int linha)
         {
-            this.Coluna = coluna;
+            this.Coluna = char.Parse(coluna.ToString().ToLower());
             this.Linha = linha;
         }
 
