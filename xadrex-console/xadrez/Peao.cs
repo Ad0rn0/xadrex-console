@@ -1,12 +1,17 @@
 ﻿using System.Runtime.ConstrainedExecution;
 using System.Runtime.Serialization;
 using tabuleiro;
+using xadrez;
 
 namespace xadrex_console.xadrez
 {
     class Peao : Peca
     {
-        public Peao (Tabuleiro tab, Cor cor) : base (tab, cor) { }
+        private PartidaDeXadrez partida;
+        public Peao (Tabuleiro tab, Cor cor, PartidaDeXadrez partida) : base (tab, cor)
+        {
+            this.partida = partida;
+        }
 
         public override string ToString()
         {
@@ -39,7 +44,7 @@ namespace xadrex_console.xadrez
                 }
 
                 pos.DefinirValores(posicao.linha - 2, posicao.coluna);
-                if (tab.PosicaoValida(pos) && Livre(pos) && qtdMovimentos == 0 || ExisteInimigo(pos))
+                if (tab.PosicaoValida(pos) && Livre(pos) && qtdMovimentos == 0)
                 {
                     mat[pos.linha, pos.coluna] = true;
                 }
@@ -55,6 +60,23 @@ namespace xadrex_console.xadrez
                 {
                     mat[pos.linha, pos.coluna] = true;
                 }
+
+                // #jogada especial en passant
+                if (posicao.linha == 3)
+                {
+                    Posicao esquerda = new Posicao(posicao.linha, posicao.coluna - 1);
+                    if (tab.PosicaoValida(esquerda) && ExisteInimigo(esquerda) && tab.peca(esquerda) == partida.VuneravelEnPassant)
+                    {
+                        mat[esquerda.linha - 1, esquerda.coluna] = true;
+                    }
+
+                    Posicao direita = new Posicao(posicao.linha, posicao.coluna + 1);
+                    if (tab.PosicaoValida(direita) && ExisteInimigo(direita) && tab.peca(direita) == partida.VuneravelEnPassant)
+                    {
+                        mat[direita.linha - 1, direita.coluna] = true;
+                    }
+                }
+                
             }
             else
             {
@@ -80,6 +102,22 @@ namespace xadrex_console.xadrez
                 if (tab.PosicaoValida(pos) && ExisteInimigo(pos))
                 {
                     mat[pos.linha, pos.coluna] = true;
+                }
+
+                // #jogada especial en passant
+                if (posicao.linha == 4)
+                {
+                    Posicao esquerda = new Posicao(posicao.linha, posicao.coluna - 1);
+                    if (tab.PosicaoValida(esquerda) && ExisteInimigo(esquerda) && tab.peca(esquerda) == partida.VuneravelEnPassant)
+                    {
+                        mat[esquerda.linha + 1, esquerda.coluna] = true;
+                    }
+
+                    Posicao direita = new Posicao(posicao.linha, posicao.coluna + 1);
+                    if (tab.PosicaoValida(direita) && ExisteInimigo(direita) && tab.peca(direita) == partida.VuneravelEnPassant)
+                    {
+                        mat[direita.linha + 1, direita.coluna] = true;
+                    }
                 }
             }
             return mat;
